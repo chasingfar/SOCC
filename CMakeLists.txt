@@ -8,6 +8,8 @@ add_link_options(-stdlib=libc++ -fexperimental-library)
 include(cmake/CPM.cmake)
 CPMAddPackage("gh:TheLartians/Ccache.cmake@1.2.4")
 
+add_subdirectory(extern/SOASM)
+include_directories(extern/SOASM/include)
 include_directories(include)
 
 add_executable(socc main.cpp)

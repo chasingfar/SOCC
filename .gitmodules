@@ -1,0 +1,3 @@
+[submodule "extern/SOASM"]
+	path = extern/SOASM
+	url = https://github.com/chasingfar/SOASM
