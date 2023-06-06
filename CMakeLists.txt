@@ -9,7 +9,10 @@ include(cmake/CPM.cmake)
 CPMAddPackage("gh:TheLartians/Ccache.cmake@1.2.4")
 
 add_subdirectory(extern/SOASM)
-include_directories(extern/SOASM/include)
-include_directories(include)
 
-add_executable(socc main.cpp)
+add_library(libsocc src/var.cpp src/statement.cpp src/library.cpp include/socc/library.hpp)
+target_link_libraries(libsocc libsoasm)
+target_include_directories(libsocc PUBLIC include)
+
+add_executable(socc main.cpp src/instrs.cpp)
+target_link_libraries(socc libsocc soisv1)
