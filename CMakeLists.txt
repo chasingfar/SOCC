@@ -14,5 +14,8 @@ add_library(libsocc src/var.cpp src/statement.cpp src/library.cpp include/socc/l
 target_link_libraries(libsocc libsoasm)
 target_include_directories(libsocc PUBLIC include)
 
-add_executable(socc main.cpp src/instrs.cpp)
-target_link_libraries(socc libsocc soisv1)
+add_library(libsocc-soisv1 src/instrs.cpp)
+target_link_libraries(libsocc-soisv1 libsocc soisv1)
+
+add_executable(socc main.cpp)
+target_link_libraries(socc libsocc-soisv1)
