@@ -39,7 +39,7 @@ namespace SOCC {
 	};
 	inline auto expr(const Code& code){return std::make_shared<Expr>(code);}
 	struct Var:Value{
-		virtual Code save() const=0;
+		[[nodiscard]] virtual Code save() const=0;
 	};
 	template<typename Reg>
 	struct RegVar:Var{
@@ -139,7 +139,7 @@ namespace SOCC {
 		template<typename T>
 		auto operator=(const T& val){
 			T var{alloc(T::size)};
-			init.body<<var.set(val);
+			init.body.add(var.set(val));
 			return var;
 		}
 	};
