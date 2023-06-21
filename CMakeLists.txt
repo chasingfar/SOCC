@@ -8,7 +8,9 @@ add_link_options(-stdlib=libc++ -fexperimental-library)
 include(cmake/CPM.cmake)
 CPMAddPackage("gh:TheLartians/Ccache.cmake@1.2.4")
 
-add_subdirectory(extern/SOASM)
+if(NOT TARGET libsoasm)
+    add_subdirectory(extern/SOASM)
+endif()
 
 add_library(libsocc src/var.cpp src/statement.cpp src/library.cpp include/socc/library.hpp)
 target_link_libraries(libsocc libsoasm)
