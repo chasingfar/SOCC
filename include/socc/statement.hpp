@@ -71,6 +71,19 @@ namespace SOCC {
 	struct LoopStmt{
 		void_ break_,continue_;
 	};
+	struct loop_{
+		Label start_,end_;
+		Stmt body;
+		loop_(Stmt stmt):body(std::move(stmt)){}
+		template<typename F> requires std::is_invocable_r_v<Stmt , F, LoopStmt>
+		loop_(F&& fn):body(fn(LoopStmt{asm_(jmp(end_)),asm_(jmp(start_))})){}
+		[[nodiscard]] Code to_code() const{
+			return {start_,body,Instrs::jmp(start_),end_};
+		}
+		[[nodiscard]] void_ end() const{
+			return asm_(to_code());
+		}
+	};
 	struct while_{
 		Label start_;
 		bool_ cond;
