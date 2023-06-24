@@ -9,25 +9,25 @@ int16 sub_function(int8 arg1, int16 arg2, int8 arg3);
 
 |    ....       | high address
 +---------------+
-|     low       |    new BP + 9
+|     high      |    new BP + 9
 + return value  +
-|     high      |    new BP + 8
+|     low       |    new BP + 8
 +---------------+
 | arg1          |    new BP + 7
 +---------------+
-|     low       |    new BP + 6
+|     high      |    new BP + 6
 + arg2          +
-|     high      |    new BP + 5
+|     low       |    new BP + 5
 +---------------+
 | arg3          |    new BP + 4
 +---------------+
-|     low       |    new BP + 3
+|     high      |    new BP + 3
 +return address +
-|     high      |    new BP + 2
+|     low       |    new BP + 2
 +---------------+
-|     low       |    new BP + 1
+|     high      |    new BP + 1
 + old BP        +
-|     high      | <- new BP
+|     low       | <- new BP
 +---------------+
 | local var 1   |    new BP - 1
 +---------------+
@@ -126,17 +126,17 @@ int16 sub_function(int8 arg1, int16 arg2, int8 arg3);
 
 |    ....       | high address
 +---------------+---------------+
-| arg1          |     low       |    new BP + 5
+| arg1          |     high      |    new BP + 5
 +---------------+ return value  +
-|     low       |     high      |    new BP + 4
+|     high      |     low       |    new BP + 4
 + arg2          +---------------+
-|     high      |    new BP + 3
+|     low       |    new BP + 3
 +---------------+
 | arg3          |    new BP + 2
 +---------------+
-|     low       |    new BP + 1
+|     high      |    new BP + 1
 + old BP        +
-|     high      | <- new BP
+|     low       | <- new BP
 +---------------+
 | local var 1   |    new BP - 1
 +---------------+
@@ -151,7 +151,7 @@ int16 sub_function(int8 arg1, int16 arg2, int8 arg3);
 		using This = InplaceFn<Ret(Args...)>;
 		using Base = FnBase<Ret(Args...)>;
 		static constexpr ssize_t ret_start=Base::arg_size+2-Base::ret_size;
-		static constexpr ssize_t arg_start=Base::arg_size+2-1;
+		static constexpr ssize_t arg_start=Base::arg_size+2;
 		Label end_;
 
 		template<typename F>requires std::is_invocable_r_v<Stmt , F, This&, Args...>
