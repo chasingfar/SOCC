@@ -25,7 +25,7 @@ namespace SOCC{
 		Code save_local(ssize_t);
 		Code load_ptr(ssize_t);
 		Code save_ptr(ssize_t);
-		Code imm_ptr(const Label&);
+		Code pop_ptr();
 		Code pushBP();
 
 		Code adj(ssize_t);

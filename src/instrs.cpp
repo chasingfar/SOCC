@@ -1,7 +1,7 @@
 #include "socc/instrs.hpp"
 #include <soasm/soisv1.hpp>
 #define SOCC_BP Reg16::HL
-#define SOCC_PTR Reg16::HL
+#define SOCC_PTR Reg16::FE
 
 namespace SOCC::Instrs{
 	using namespace SOASM::SOISv1;
@@ -36,7 +36,8 @@ namespace SOCC::Instrs{
 	}
 	Code imm (const Label& addr) {
 		return LE::u16::to_bytes(addr.lazy())
-		       |std::views::transform([](const Lazy& v){
+				|std::views::reverse
+		    	|std::views::transform([](const Lazy& v){
 			return imm(v);
 		});
 	}
@@ -82,6 +83,6 @@ namespace SOCC::Instrs{
 	Code save_local(ssize_t offset) {return save(SOCC_BP,offset);}
 	Code load_ptr  (ssize_t offset) {return load(SOCC_PTR,offset);}
 	Code save_ptr  (ssize_t offset) {return save(SOCC_PTR,offset);}
-	Code  imm_ptr(const Label& val) {return {imm(val),pop(SOCC_PTR)};}
+	Code  pop_ptr() {return pop(SOCC_PTR);}
 
 }

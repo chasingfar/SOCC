@@ -1,8 +1,6 @@
 #include <socc/var.hpp>
 #include <algorithm>
 #include <soasm/soisv1.hpp>
-#define SOCC_BP Reg16::HL
-#define SOCC_PTR Reg16::HL
 
 using namespace SOCC;
 using namespace SOASM::SOISv1;
@@ -33,7 +31,7 @@ Code LocalVar::get_ref() const {
 
 Code StaticVar::load(ssize_t index, bool is_first) const {
 	if(is_first){
-		return {imm_ptr(label), load_ptr(offset+index)};
+		return {imm(label),pop_ptr(), load_ptr(offset+index)};
 	}else{
 		return load_ptr(offset+index);
 	}
@@ -41,7 +39,7 @@ Code StaticVar::load(ssize_t index, bool is_first) const {
 
 Code StaticVar::save(ssize_t index, bool is_first) const {
 	if(is_first){
-		return {imm_ptr(label), save_ptr(offset+index)};
+		return {imm(label),pop_ptr(), save_ptr(offset+index)};
 	}else{
 		return save_ptr(offset+index);
 	}
@@ -53,7 +51,7 @@ Code StaticVar::get_ref() const {
 
 Code PtrVar::load(ssize_t index, bool is_first) const {
 	if(is_first){
-		return {ptr, load_ptr(offset+index)};
+		return {ptr,pop_ptr(), load_ptr(offset+index)};
 	}else{
 		return load_ptr(offset+index);
 	}
@@ -61,7 +59,7 @@ Code PtrVar::load(ssize_t index, bool is_first) const {
 
 Code PtrVar::save(ssize_t index, bool is_first) const {
 	if(is_first){
-		return {ptr, save_ptr(offset+index)};
+		return {ptr,pop_ptr(), save_ptr(offset+index)};
 	}else{
 		return save_ptr(offset+index);
 	}
