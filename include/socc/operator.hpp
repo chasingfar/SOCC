@@ -193,7 +193,7 @@ namespace SOCC {
 		return sum;
 	}
 	template<typename T>
-	inline auto operator+(const ptr<T>& p,const Int<SOCC_PTR_SIZE,false>& v){
+	inline ptr<T> operator+(const ptr<T>& p,const Int<SOCC_PTR_SIZE,false>& v){
 		return add(p,v*T::size);
 	}
 	template<typename T> requires std::is_base_of_v<Type<T::size>,T>
