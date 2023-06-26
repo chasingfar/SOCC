@@ -56,10 +56,10 @@ namespace SOCC::Instrs{
 	Code call_ptr() {return CallPtr{}();}
 	Code ret() {return Return{}();}
 
-	Code adj(ssize_t size) {return Adjust{}(size);}
+	Code adj(ssize_t size) {return size==0?Code{}:Adjust{}(size);}
 	Code lev() {return Leave{.bp=SOCC_BP}();}
 	Code ent() {return Enter{.bp=SOCC_BP}();}
-	Code enter(ssize_t size) {return {ent(),adj(size)};}
+	Code enter(ssize_t size) {return {ent(),adj(-size)};}
 	Code leave() {return {lev(),ret()};}
 
 	Code add() {return Calc{.fn=Calc::FN::ADD}();}
