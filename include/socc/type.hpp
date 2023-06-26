@@ -269,16 +269,18 @@ namespace SOCC {
 	template<typename T>struct UnPtr        {};
 	template<typename T>struct UnPtr<ptr<T>>{using type = T;};
 	template<typename T>concept IsPtr = requires {typename UnPtr<T>::type;};
-/*
-	inline static const u8 Reg_A{RegVar::make(Reg::A)};
-	inline static const u8 Reg_B{RegVar::make(Reg::B)};
-	inline static const u8 Reg_C{RegVar::make(Reg::C)};
-	inline static const u8 Reg_D{RegVar::make(Reg::D)};
-	inline static const u8 Reg_E{RegVar::make(Reg::E)};
-	inline static const u8 Reg_F{RegVar::make(Reg::F)};
-	inline static const u8 Reg_L{RegVar::make(Reg::L)};
-	inline static const u8 Reg_H{RegVar::make(Reg::H)};
- */
+
+	struct char_:AsInt< uint8_t>{ DEF_TYPE2(char_,AsInt< uint8_t>) }; // NOLINT(google-explicit-constructor)
+	struct cstring:ptr<char_>{ DEF_TYPE2(cstring,ptr<char_>) }; // NOLINT(google-explicit-constructor)
+	inline auto operator""_c  (char val){return char_{val};}
+	inline static ReadOnlyVars str_lits;
+	inline auto operator""_s  (const char* str, std::size_t size){
+		data_t data(size+1,static_cast<uint8_t>(0));
+		auto s=reinterpret_cast<const uint8_t*>(str);
+		std::copy(s,s+size,data.begin());
+		str_lits.presets.push_front(data);
+		return ptr<char_>{str_lits.alloc(size+1)};
+	}
 }
 
 #endif //SOCC_TYPE_HPP
