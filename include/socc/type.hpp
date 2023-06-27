@@ -273,13 +273,12 @@ namespace SOCC {
 	struct char_:AsInt< uint8_t>{ DEF_TYPE2(char_,AsInt< uint8_t>) }; // NOLINT(google-explicit-constructor)
 	struct cstring:ptr<char_>{ DEF_TYPE2(cstring,ptr<char_>) }; // NOLINT(google-explicit-constructor)
 	inline auto operator""_c  (char val){return char_{val};}
-	inline static ReadOnlyVars str_lits;
-	inline auto operator""_s  (const char* str, std::size_t size){
+	inline static LabeledVars str_lits;
+	inline cstring operator""_s  (const char* str, std::size_t size){
 		data_t data(size+1,static_cast<uint8_t>(0));
-		auto s=reinterpret_cast<const uint8_t*>(str);
-		std::copy(s,s+size,data.begin());
+		std::copy_n(reinterpret_cast<const uint8_t*>(str),size,data.begin());
 		str_lits.presets.push_front(data);
-		return ptr<char_>{str_lits.alloc(size+1)};
+		return ptr<char_>{expr(str_lits.alloc(size+1)->get_ref())};
 	}
 }
 

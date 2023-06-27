@@ -162,5 +162,24 @@ namespace SOCC {
 			return T{alloc(T::size)};
 		}
 	};
+	struct LabeledVars:CodeBlock,Allocator{
+		std::forward_list<data_t> presets{};
+		std::shared_ptr<MemVar> alloc(size_t size) override {
+			Label label;
+			body.add(label);
+			if(presets.empty()){
+				body.add(std::vector<uint8_t>(size,0));
+			}else{
+				body.add(presets.front());
+				presets.pop_front();
+			}
+			return StaticVar::make(size, label, 0);
+		}
+		template<typename T>
+		auto operator=(const T& val){
+			presets.push_front(val.as_raw()->data);
+			return T{alloc(T::size)};
+		}
+	};
 }
 #endif //SOCC_VAR_HPP
