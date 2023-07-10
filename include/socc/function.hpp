@@ -94,7 +94,7 @@ int16 sub_function(int8 arg1, int16 arg2, int8 arg3);
 		template<typename F>requires std::is_invocable_r_v<Stmt , F, This&, Args...>
 		explicit Fn(F&& fn):Base{ret_start,arg_start}{impl(fn);}
 		auto operator&(){
-			return ptr<This>(expr(push(this->start)));
+			return ptr<This>(expr(imm(this->start)));
 		}
 	};
 
