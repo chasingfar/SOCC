@@ -85,3 +85,7 @@ void_ for_::end() const {
 		end_,
 	});
 }
+
+void_ SOCC::loop_(const Stmt &stmt, const Label &start, const Label &end) {
+	return asm_({start,stmt,jmp(start),end});
+}

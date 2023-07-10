@@ -71,33 +71,27 @@ namespace SOCC {
 	struct LoopStmt{
 		void_ break_,continue_;
 	};
-	struct loop_{
-		Label start_,end_;
-		Stmt body;
-		loop_(Stmt stmt):body(std::move(stmt)){}
-		template<typename F> requires std::is_invocable_r_v<Stmt , F, LoopStmt>
-		loop_(F&& fn):body(fn(LoopStmt{asm_(jmp(end_)),asm_(jmp(start_))})){}
-		[[nodiscard]] Code to_code() const{
-			return {start_,body,Instrs::jmp(start_),end_};
-		}
-		[[nodiscard]] void_ end() const{
-			return asm_(to_code());
-		}
-	};
+
+	void_ loop_(const Stmt& stmt,const Label& start=Label{},const Label& end=Label{});
+	template<typename F> requires std::is_invocable_r_v<Stmt , F, LoopStmt>
+	void_ loop_(F&& fn){
+		Label start,end;
+		return loop_(fn(LoopStmt{asm_(jmp(end)),asm_(jmp(start))}),start,end);
+	}
 	struct while_{
 		Label start_;
 		bool_ cond;
 		Block body{};
 		Label end_;
 		explicit while_(const bool_& cond):cond(cond){}
-		while_& do_(Stmt code){
+		void_ do_(Stmt code){
 			body.body=std::move(code);
-			return *this;
+			return end();
 		}
 		template<typename F>requires std::is_invocable_r_v<Stmt , F, LoopStmt>
-		while_& do_(F&& fn){
+		void_ do_(F&& fn){
 			body.body=fn(LoopStmt{asm_(jmp(end_)),asm_(jmp(start_))});
-			return *this;
+			return end();
 		}
 		[[nodiscard]] void_ end() const;
 	};
@@ -116,14 +110,14 @@ namespace SOCC {
 		bool_ cond;
 		Block body{};
 		explicit for_(const void_& init,const bool_& cond,const void_& iter):init(init),cond(cond),iter(iter){}
-		for_& do_(Stmt code){
+		void_ do_(Stmt code){
 			body.body=std::move(code);
-			return *this;
+			return end();
 		}
 		template<typename F>requires std::is_invocable_r_v<Stmt , F, LoopStmt>
-		for_& do_(F&& fn){
+		void_ do_(F&& fn){
 			body.body=fn(LoopStmt{asm_(jmp(end_)),asm_(jmp(cont))});
-			return *this;
+			return end();
 		}
 		[[nodiscard]] void_ end() const;
 	};
