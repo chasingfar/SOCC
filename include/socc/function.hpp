@@ -65,7 +65,8 @@ int16 sub_function(int8 arg1, int16 arg2, int8 arg3);
 		using Base = FnBase<Ret(Args...)>;
 		static constexpr ssize_t ret_start=Base::arg_size+4;
 		static constexpr ssize_t arg_start=Base::arg_size+4;
-		explicit Fn(const std::string& name=""):Base{name,ret_start,arg_start}{}
+		explicit Fn(const std::string& name):Base{name,ret_start,arg_start}{}
+		explicit Fn():Base{ret_start,arg_start}{}
 
 		Ret operator()(const Args&... args_) const{
 			Code code{};
